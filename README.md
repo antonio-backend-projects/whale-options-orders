@@ -122,7 +122,7 @@ Verifica che la chiave `.env` sia corretta e attiva. Puoi anche testare la tua A
 
 ## 👨‍💻 Autore
 
-Script generato con ❤️ da \[ChatGPT + Utente] — Open Source Intelligence applicata al flusso opzioni.
+Script generato con ❤️ da \[Antonio Trento] — Open Source Intelligence applicata al flusso opzioni.
 
 ---
 
