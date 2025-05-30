@@ -1,8 +1,6 @@
-Ecco un `README.md` completo e dettagliato per Windows, con guida all’uso di ambiente virtuale (**venv**), installazione, configurazione e avvio dello script.
+## 📘 Whale options orders — Smart Money Options Monitor
 
----
-
-## 📘 README.md — Smart Money Options Monitor
+https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2
 
 ### 📊 Monitora automaticamente le opzioni call sospette su titoli principali (tipo Sweep) e interpreta i flussi con OpenAI.
 
