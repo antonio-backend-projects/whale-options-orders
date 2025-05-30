@@ -1,8 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
+import json
+from datetime import datetime
 
 
-def get_unusual_option_activity():
+def get_unusual_option_activity_barchart():
     url = "https://www.barchart.com/options/unusual-activity/stocks"
     headers = {"User-Agent": "Mozilla/5.0"}
     res = requests.get(url, headers=headers)
@@ -37,19 +39,61 @@ def get_unusual_option_activity():
             else:
                 premium = float(premium_str)
 
+            # Smart money filter (NO sweep)
             if option_type == "Call" and premium >= 500_000 and volume > open_interest:
                 unusual_orders.append({
+                    "source": "Barchart",
                     "ticker": ticker,
                     "expiry": expiry,
                     "strike": strike,
                     "type": option_type,
                     "volume": volume,
-                    "oi": open_interest,
+                    "open_interest": open_interest,
                     "last_price": last_price,
-                    "premium": premium,
-                    "trade_type": "Unknown"  # Placeholder, not available in public Barchart HTML
+                    "premium": premium
                 })
         except Exception:
             continue
 
     return unusual_orders
+
+
+def get_top_sentiment_swaggy():
+    url = "https://swaggystocks.com/dashboard/wallstreetbets/ticker-sentiment"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, "html.parser")
+
+    tickers = []
+    try:
+        table = soup.find("table")
+        rows = table.find_all("tr")[1:]  # Skip header
+        for row in rows[:20]:  # Primi 20 titoli
+            cols = row.find_all("td")
+            if len(cols) >= 2:
+                ticker = cols[0].get_text(strip=True)
+                sentiment = cols[1].get_text(strip=True)
+                tickers.append({"source": "SwaggyStocks", "ticker": ticker, "sentiment": sentiment})
+    except Exception:
+        pass
+
+    return tickers
+
+
+def cross_reference(unusual, sentiment):
+    trending = set([s['ticker'] for s in sentiment])
+    highlighted = [entry for entry in unusual if entry['ticker'] in trending]
+    return highlighted
+
+
+if __name__ == "__main__":
+    barchart_data = get_unusual_option_activity_barchart()
+    swaggy_data = get_top_sentiment_swaggy()
+    combined = cross_reference(barchart_data, swaggy_data)
+
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M")
+
+    with open(f"unusual_options_{now}.json", "w") as f:
+        json.dump({"highlighted": combined, "barchart": barchart_data, "swaggy": swaggy_data}, f, indent=2)
+
+    print(f"Salvati {len(combined)} segnali incrociati su {len(barchart_data)} ordini insoliti.")
