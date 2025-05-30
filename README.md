@@ -1,6 +1,6 @@
-## 📘 Whale options orders — Smart Money Options Monitor
+## 📘 Whale Options Orders — Smart Money Options Monitor
 
-https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2
+[https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2](https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2)
 
 ### 📊 Monitora automaticamente le opzioni call sospette su titoli principali (tipo Sweep) e interpreta i flussi con OpenAI.
 
@@ -8,7 +8,8 @@ https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2
 
 ### 🚀 Funzionalità
 
-* ✅ Scraping da sito pubblico gratuito (Barchart)
+* ✅ Login e scraping automatizzato da sito pubblico gratuito (**Barchart**) con **Playwright**
+* 📥 Download e analisi del file **CSV** delle opzioni insolite
 * 📈 Rilevamento opzioni call con:
 
   * Tipo ordine: **Sweep**
@@ -16,13 +17,14 @@ https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2
   * Volume > Open Interest
   * Scadenza entro 90 giorni
 * 🤖 Analisi automatica con **OpenAI GPT-4**
-* 🔐 Sicurezza API tramite `.env`
+* 🔐 Sicurezza credenziali e API tramite file `.env`
 
 ---
 
 ## 🖥️ Requisiti
 
-* Python **3.9+** installato
+* Python **3.9+**
+* Browser Chromium (gestito automaticamente da Playwright)
 * Connessione Internet
 
 ---
@@ -32,11 +34,11 @@ https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2
 ### 1. Clona o scarica il progetto
 
 ```bash
-git clone https://github.com/tuo-utente/smartmoney_tsla.git
-cd smartmoney_tsla
+git clone https://github.com/antonio-backend-projects/whale-options-orders
+cd whale-options-orders
 ```
 
-### 2. Crea un ambiente virtuale (Windows)
+### 2. Crea un ambiente virtuale
 
 ```bash
 python -m venv venv
@@ -47,6 +49,7 @@ venv\Scripts\activate
 
 ```bash
 pip install -r requirements.txt
+playwright install
 ```
 
 ---
@@ -55,9 +58,11 @@ pip install -r requirements.txt
 
 ```
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+BARCHART_USER=la-tua-email-registrata
+BARCHART_PASSWORD=la-tua-password
 ```
 
-> ❗ Non condividere mai la tua chiave OpenAI.
+> ⚠️ **Non condividere mai la tua chiave OpenAI o credenziali Barchart.**
 
 ---
 
@@ -72,15 +77,16 @@ python main.py
 ## 📂 Struttura del progetto
 
 ```
-smartmoney_tsla/
+whale-options-orders/
 │
-├── .env                   ← la tua chiave OpenAI qui
+├── .env                   ← credenziali e chiavi API
 ├── main.py                ← script principale
-├── requirements.txt       ← librerie Python richieste
+├── requirements.txt       ← dipendenze Python
 ├── README.md              ← questo file
+├── downloads/             ← CSV scaricati da Barchart
 └── utils/
-    ├── scraper.py         ← scraping dei dati opzioni da Barchart
-    └── gpt_analysis.py    ← analisi dei flussi con OpenAI
+    ├── scraper.py         ← scraping + download CSV da Barchart
+    └── gpt_analysis.py    ← analisi flussi con OpenAI GPT-4
 ```
 
 ---
@@ -90,12 +96,12 @@ smartmoney_tsla/
 ```
 📡 Cercando opzioni sospette su titoli principali...
 
-📈 Ordine sospetto su TSLA (Call 350 @ Jul 19, 2025)
-💰 Premio: $2,200,000 | Vol: 2,396 | OI: 1,391
+📈 Ordine sospetto su AAPL (Call 200 @ Aug 16, 2025)
+💰 Premio: $1,050,000 | Vol: 3,400 | OI: 2,100
 ⚡ Tipo: Sweep
 
 🧠 Analisi AI:
-Questo ordine è molto probabilmente attribuibile a uno smart money trader...
+Questo ordine mostra un'alta probabilità di movimento istituzionale...
 --------------------------------------------------
 ```
 
@@ -103,27 +109,36 @@ Questo ordine è molto probabilmente attribuibile a uno smart money trader...
 
 ## 📌 Personalizzazioni future (facoltative)
 
-* Esportazione CSV
-* Notifiche via Telegram o email
-* Interfaccia Web con Dash
-* Filtro per titoli o settori specifici
+* Esportazione degli ordini in CSV
+* Dashboard web in **Dash**
+* Notifiche **Telegram** o **email**
+* Filtro per settore (es. solo tech, solo energy)
+* Modalità cron (esecuzione automatica ogni ora)
 
 ---
 
 ## ❓ Domande frequenti
 
 **🟠 Non vedo dati?**
-Il sito pubblico potrebbe non avere sweep rilevanti nel momento della richiesta. Riprova più tardi.
+È possibile che in quel momento non ci siano sweep validi secondo i filtri. Riprova più tardi.
 
 **🔴 Errore da OpenAI?**
-Verifica che la chiave `.env` sia corretta e attiva. Puoi anche testare la tua API qui: [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
+Controlla la chiave `.env` e che tu abbia credito disponibile:
+[https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
+
+**🧭 Il login a Barchart fallisce?**
+Verifica che email e password siano corrette e che non sia richiesto un CAPTCHA (Playwright non può bypassarlo).
 
 ---
 
 ## 👨‍💻 Autore
 
-Script generato con ❤️ da \[Antonio Trento] — Open Source Intelligence applicata al flusso opzioni.
+Script generato con ❤️ da **Antonio Trento** — Open Source Intelligence applicata al flusso opzioni.
 
 ---
 
-Fammi sapere se vuoi che ti impacchetti tutto in uno zip oppure in un repo GitHub pubblicabile.
+Fammi sapere se vuoi anche:
+
+* Un archivio `.zip` pronto per distribuzione
+* La pubblicazione del progetto su GitHub con licenza open source
+* L’aggiunta di logging avanzato o notifiche Telegram
