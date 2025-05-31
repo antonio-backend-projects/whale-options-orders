@@ -2,7 +2,7 @@
 
 [https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2](https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2)
 
-### 📊 Monitora automaticamente le opzioni call sospette su titoli principali (tipo Sweep) e interpreta i flussi con OpenAI.
+### 📊 Monitora automaticamente ordini in opzioni sospette sui titoli principali del mercato azionario e interpreta i flussi con OpenAI.
 
 ![whale-hunter](images/20250531_1244.png)
 
@@ -159,4 +159,4 @@ Script generato con ❤️ da **[Antonio Trento](https://antoniotrento.net)** �
 
 
 
-![whale-hunter-2](images/20250531_1238.png) ciao
+![whale-hunter-2](images/20250531_1238.png)
