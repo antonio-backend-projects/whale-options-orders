@@ -12,9 +12,9 @@
 
 * ✅ Login e scraping automatizzato da sito pubblico gratuito (**Barchart**) con **Playwright**
 * 📥 Download e analisi del file **CSV** delle opzioni insolite
-* 📈 Rilevamento opzioni call con:
+* 📈 Rilevamento opzioni con:
 
-  * Tipo ordine: **Sweep**
+  * Tipo ordine: **Sweep** ipotetico
   * **Premio ≥ \$500k**
   * Volume > Open Interest
   * Scadenza entro 90 giorni
@@ -118,15 +118,16 @@ Questo ordine mostra un'alta probabilità di movimento istituzionale...
 
 ---
 
-## 📌 Personalizzazioni future (facoltative)
+## 📌 Possibili Personalizzazioni future
 
 * Esportazione degli ordini in CSV
 * Dashboard web in **Dash**
 * Notifiche **Telegram** o **email**
 * Filtro per settore (es. solo tech, solo energy)
-* Modalità cron (esecuzione automatica ogni ora)
+* Modalità cron (esecuzione automatica ogni giorno)
 * 🧩 Integrazione con voce AI per output vocali live
 * 🔔 Alert automatici per rotture tecniche e breakout su titoli seguiti
+* Integrazione con cheddarflow per dati più dettagliati 
 
 ---
 
