@@ -155,5 +155,5 @@ Puoi consultare il file [![License: MIT](https://img.shields.io/badge/License-MI
 
 ## 👨‍💻 Autore
 
-Script generato con ❤️ da **Antonio Trento** [![Antonio Trento](https://img.shields.io/badge/License-MIT-blue.svg)](https://antoniotrento.net) — Open Source Intelligence applicata al flusso opzioni.
+Script generato con ❤️ da **[!Antonio Trento](https://antoniotrento.net)** — Open Source Intelligence applicata al flusso opzioni.
 
