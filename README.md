@@ -1,4 +1,4 @@
-## 📘 Whale Hunter — Smart Money Options Monitor
+## 📘 Whale Hunter — Smart Money Options Monitor [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 [https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2](https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2)
 
@@ -34,6 +34,7 @@
 * Python **3.9+**
 * Browser Chromium (gestito automaticamente da Playwright)
 * Connessione Internet
+* Account Barchart per ottenere serie di dati aggiornati da https://www.barchart.com/options/unusual-activity/stocks (con account gratuito un download al giorno)
 
 ---
 
@@ -68,6 +69,7 @@ playwright install
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 BARCHART_USER=la-tua-email-registrata
 BARCHART_PASSWORD=la-tua-password
+CSV_FILE_PATH=unusual-stock-options-activity-05-30-2025.csv # Popolando questa variabile di ambiente lo script esegue le elaborazioni sul file specificato e non effettuerà il download da barchart
 ```
 
 > ⚠️ **Non condividere mai la tua chiave OpenAI o credenziali Barchart.**
@@ -142,7 +144,16 @@ Controlla la chiave `.env` e che tu abbia credito disponibile:
 **🧭 Il login a Barchart fallisce?**
 Verifica che email e password siano corrette e che non sia richiesto un CAPTCHA (Playwright non può bypassarlo).
 
+
 ---
+
+## 📄 Licenza
+
+Questo progetto è distribuito sotto licenza **MIT**.
+Puoi consultare il file [`LICENSE`](./LICENSE) per i dettagli.
+
+---
+
 
 ## 👨‍💻 Autore
 
