@@ -4,7 +4,7 @@
 
 ### 📊 Monitora automaticamente le opzioni call sospette su titoli principali (tipo Sweep) e interpreta i flussi con OpenAI.
 
-![whale-hunter](images/20250531_1244_Scontro Epico Giapponese_simple_compose_01jwjz0fhme9xspg55nw7mfpd5.png)
+![whale-hunter](images/20250531_1244.png)
 
 ---
 
@@ -27,7 +27,7 @@
 
 ---
 
-![whale-hunter](images/Screenshot 2025-05-31 143230.png)
+![whale-hunter](images/whale-hunter-screen.png)
 
 ## 🖥️ Requisiti
 
