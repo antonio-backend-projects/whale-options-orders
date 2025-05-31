@@ -5,3 +5,5 @@
     [X] Elaborazione del csv per estrarre le operazioni degli smart money / balene quindi usiamo una libreria per leggere i csv
 
 [] Migliorare le condizioni di filtraggio del file csv per individuare veri smart money
+[] Migliorare i prompt perchè pressoche inutili al momento
+[] Rifare readme per includere le nuove modifiche
