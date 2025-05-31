@@ -4,15 +4,19 @@
     [X] Download del file csv dal bottone <a class="toolbar-button download ng-isolate-scope" data-bc-download-button="  Unusual Stock Options Activity  "> <i class="bc-glyph-download"></i> <span>download</span></a>
     [X] Elaborazione del csv per estrarre le operazioni degli smart money / balene quindi usiamo una libreria per leggere i csv
 
-[] Migliorare le condizioni di filtraggio del file csv per individuare veri smart money, ho già buoni risultati ma alcuni segnali sono ambigui dopo averli passati a gpt_analysis.py
+[X] Migliorare le condizioni di filtraggio del file csv per individuare veri smart money, ho già buoni risultati ma alcuni segnali sono ambigui dopo averli passati a gpt_analysis.py
 [] Migliorare i prompt perchè pressoche inutili al momento, migliorato ma cerchiamo di fare di meglio
-[] Rifare readme per includere le nuove modifiche
+[X] Rifare readme per includere le nuove modifiche
+
+[] Scaricare i risultati e analisi in un csv
 
 
 
 
+# Appunti
 
-# analisi da deepseek
+
+## analisi da deepseek
 
 In attesa di risposta:
 https://chat.deepseek.com/a/chat/s/ea704bfd-dad1-4f9c-9942-4e3bfe39c477
