@@ -159,4 +159,4 @@ Script generato con ❤️ da **[Antonio Trento](https://antoniotrento.net)** �
 
 
 
-![whale-hunter-2](images/20250531_1238.png)
+![whale-hunter-2](images/20250531_1238.png) ciao
