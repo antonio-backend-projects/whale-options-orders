@@ -116,8 +116,6 @@ Questo ordine mostra un'alta probabilità di movimento istituzionale...
 --------------------------------------------------
 ```
 
-![output](images/analysis_output.png)
-
 ---
 
 ## 📌 Personalizzazioni future (facoltative)
@@ -150,7 +148,7 @@ Verifica che email e password siano corrette e che non sia richiesto un CAPTCHA 
 ## 📄 Licenza
 
 Questo progetto è distribuito sotto licenza **MIT**.
-Puoi consultare il file [`LICENSE`](./LICENSE) per i dettagli.
+Puoi consultare il file [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE) per i dettagli.
 
 ---
 
