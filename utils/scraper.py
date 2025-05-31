@@ -49,6 +49,59 @@ def is_smart_money(order):
         return False
 
 
+
+# Funzione per identificare attività insolita in termini di volume estrapolata da notebookLM
+def is_unusual_volume_activity(order):
+    try:
+        # Estrai i dati necessari. Attenzione al formato dello Strike se usa la virgola [6, 19, 20, 22, 26, 28, 34, 38, 39, 42, 44-50, 52]
+        # La gestione della virgola per Strike è già presente nella tua funzione originale, la manteniamo.
+        vol = float(order["Volume"]) #[1-57]
+        oi = float(order["Open Int"]) #[1-57]
+        # Calcola il rapporto Vol/OI - gestisce il caso oi=0 [1-57]
+        vol_oi_ratio = vol / oi if oi else float("inf") #[1-57]
+
+        # Le fonti usano principalmente il Vol/OI per identificare l'attività "insolita" [1]
+        # Usiamo un'alta soglia di Vol/OI come primo criterio
+        # La SOGLIA_VOL_OI non è definita nelle fonti e va scelta in base ai dati (es. > 10, > 20)
+        SOGLIA_VOL_OI = 3 # Esempio: mantenere la tua soglia originale come punto di partenza
+
+        # Le fonti mostrano anche operazioni con Volume assoluto molto elevato,
+        # che rappresentano un alto "volume di affari" indipendentemente dall'OI [12, 15-19, 23, 32, 33]
+        # Usiamo un'alta soglia di Volume assoluto come secondo criterio
+        # La SOGLIA_VOLUME_ASSOLUTO non è definita nelle fonti e va scelta in base ai dati (es. > 10000)
+        SOGLIA_VOLUME_ASSOLUTO = 500 # Esempio: mantenere la tua soglia originale come punto di partenza
+
+        # *** Condizioni Basate Esclusivamente sulle Fonti e Conversazione ***
+        # Un'operazione è considerata "insolita in termini di volume" se soddisfa ALMENO UNO
+        # dei due criteri principali impliciti nelle fonti: alto Vol/OI o alto Volume assoluto.
+        # Puoi scegliere di richiedere entrambe le condizioni (usando 'and' invece di 'or')
+        # se vuoi essere più restrittivo. Manteniamo 'or' per includere operazioni
+        # con alto volume anche se il rapporto Vol/OI non è altissimo (ma comunque > 3 nell'esempio).
+        # Se vuoi basarti strettamente sull'ordinamento delle fonti, dovresti solo filtrare per alto Vol/OI.
+        # Se vuoi anche catturare i maggiori volumi assoluti, usi anche la condizione sul Volume.
+
+        # Rimosse le condizioni su premio, Delta, Imp Vol, giorni a scadenza, spread Bid/Ask
+        # perché le fonti non le presentano come criteri per l'attività "insolita".
+        # Questi dati sono presenti [1-57] ma la loro rilevanza come filtro per
+        # l'"insolita" non è supportata dalle fonti stesse.
+
+        return (
+            vol_oi_ratio >= SOGLIA_VOL_OI or # Criterio principale delle fonti: alto rapporto Vol/OI [1]
+            vol >= SOGLIA_VOLUME_ASSOLUTO    # Criterio secondario implicito: alto Volume assoluto [Conversazione precedente, esempi]
+        )
+
+    except Exception as e:
+        # In caso di errori (es. dati mancanti o formato errato), ignora la riga
+        print(f"Errore nell'elaborazione della riga: {e}") # Opzionale: stampa l'errore per debug
+        return False
+
+# Esempio di utilizzo (assumendo di avere un elenco di dizionari 'orders'):
+# for order in orders_list:
+#     if is_unusual_volume_activity(order):
+#         print(f"Operazione con attività di volume insolita trovata: {order}")
+
+
+
 def normalize_order(row):
     return {
         "ticker": row["Symbol"],

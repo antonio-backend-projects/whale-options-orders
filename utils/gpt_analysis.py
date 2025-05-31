@@ -20,7 +20,8 @@ def analyze_order(order):
         f"- Tipo ordine: {order['trade_type']}\n"
         f"- Volume: {order['volume']}\n"
         f"- Open Interest: {order['oi']}\n\n"
-        f"È un ordine da smart money? Motiva la risposta in modo tecnico ma chiaro."
+        f"È un ordine da smart money? Motiva la risposta in modo tecnico, riassuntivo ma chiaro."
+        f"In base all'analisi, fornisci un segnale di trading (BUY, SELL) secco, con una breve spiegazione."
     )
 
     try:

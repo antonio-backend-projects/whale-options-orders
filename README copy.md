@@ -1,10 +1,8 @@
-## 📘 Whale Hunter — Smart Money Options Monitor
+## 📘 Whale Options Orders — Smart Money Options Monitor
 
 [https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2](https://chatgpt.com/share/68396729-4c5c-8011-ac6f-54bdb95ff2f2)
 
 ### 📊 Monitora automaticamente le opzioni call sospette su titoli principali (tipo Sweep) e interpreta i flussi con OpenAI.
-
-![whale-hunter](images/20250531_1244_Scontro Epico Giapponese_simple_compose_01jwjz0fhme9xspg55nw7mfpd5.png)
 
 ---
 
@@ -20,14 +18,8 @@
   * Scadenza entro 90 giorni
 * 🤖 Analisi automatica con **OpenAI GPT-4**
 * 🔐 Sicurezza credenziali e API tramite file `.env`
-* 📊 Analisi comportamentale dei flussi (hedging, speculazione, insider)
-* 🧠 Riconoscimento pattern multipli su stesso ticker e strike
-* 🗂️ Normalizzazione automatica del file CSV in formato compatibile con LLM
-* 🖼️ Output visivo delle analisi con esempi (vedi sotto ⬇️)
 
 ---
-
-![whale-hunter](images/Screenshot 2025-05-31 143230.png)
 
 ## 🖥️ Requisiti
 
@@ -44,7 +36,7 @@
 ```bash
 git clone https://github.com/antonio-backend-projects/whale-options-orders
 cd whale-options-orders
-````
+```
 
 ### 2. Crea un ambiente virtuale
 
@@ -92,7 +84,6 @@ whale-options-orders/
 ├── requirements.txt       ← dipendenze Python
 ├── README.md              ← questo file
 ├── downloads/             ← CSV scaricati da Barchart
-├── images/                ← immagini interfaccia ed esempi
 └── utils/
     ├── scraper.py         ← scraping + download CSV da Barchart
     └── gpt_analysis.py    ← analisi flussi con OpenAI GPT-4
@@ -114,8 +105,6 @@ Questo ordine mostra un'alta probabilità di movimento istituzionale...
 --------------------------------------------------
 ```
 
-![output](images/analysis_output.png)
-
 ---
 
 ## 📌 Personalizzazioni future (facoltative)
@@ -125,8 +114,6 @@ Questo ordine mostra un'alta probabilità di movimento istituzionale...
 * Notifiche **Telegram** o **email**
 * Filtro per settore (es. solo tech, solo energy)
 * Modalità cron (esecuzione automatica ogni ora)
-* 🧩 Integrazione con voce AI per output vocali live
-* 🔔 Alert automatici per rotture tecniche e breakout su titoli seguiti
 
 ---
 
@@ -148,3 +135,10 @@ Verifica che email e password siano corrette e che non sia richiesto un CAPTCHA 
 
 Script generato con ❤️ da **Antonio Trento** — Open Source Intelligence applicata al flusso opzioni.
 
+---
+
+Fammi sapere se vuoi anche:
+
+* Un archivio `.zip` pronto per distribuzione
+* La pubblicazione del progetto su GitHub con licenza open source
+* L’aggiunta di logging avanzato o notifiche Telegram
