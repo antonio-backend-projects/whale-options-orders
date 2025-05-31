@@ -11,7 +11,7 @@ def main():
 
     for order in orders:
         print(f"\n📈 Ordine sospetto su {order['ticker']} (Call {order['strike']} @ {order['expiry']})")
-        print(f"💰 Premio stimato: ${order['premium']:,.0f} | Vol: {order['volume']} | OI: {order['oi']}")
+        print(f"💰 Premio: ${order['premium']:,.0f} | Vol: {order['volume']} | OI: {order['oi']}")
         print(f"⚡ Tipo: {order['trade_type']}")
 
         analysis = analyze_order(order)

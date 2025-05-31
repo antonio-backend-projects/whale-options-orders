@@ -1,99 +1,119 @@
-import requests
-from bs4 import BeautifulSoup
-import json
+import os
+import time
+import pandas as pd
+from dotenv import load_dotenv
+from playwright.sync_api import sync_playwright
 from datetime import datetime
 
+load_dotenv()
 
-def get_unusual_option_activity_barchart():
-    url = "https://www.barchart.com/options/unusual-activity/stocks"
-    headers = {"User-Agent": "Mozilla/5.0"}
-    res = requests.get(url, headers=headers)
-    soup = BeautifulSoup(res.text, "html.parser")
+BARCHART_USER = os.getenv("BARCHART_USER")
+BARCHART_PASSWORD = os.getenv("BARCHART_PASSWORD")
+CSV_FILE_PATH = os.getenv("CSV_FILE_PATH")
+DOWNLOAD_DIR = os.path.join(os.getcwd(), "downloads")
+CSV_FILENAME = "unusual-stock-options-activity.csv"
 
-    table = soup.find("table", {"class": "bc-table-scrollable-inner"})
-    if not table:
+
+def is_smart_money(order):
+    try:
+        vol = float(order["Volume"])
+        oi = float(order["Open Int"])
+        vol_oi_ratio = vol / oi if oi else float("inf")
+        delta = float(order["Delta"])
+        imp_vol = float(str(order["Imp Vol"]).replace("%", ""))
+        bid = float(order["Bid"])
+        ask = float(order["Ask"])
+        strike = float(order["Strike"])
+        price = float(order["Price~"])
+        exp_date = datetime.strptime(order["Exp Date"], "%Y-%m-%d")
+        today = datetime.today()
+        days_to_expiry = (exp_date - today).days
+
+        # Calcolo premio stimato
+        mid_price = (bid + ask) / 2
+        premium = mid_price * 100 * vol
+
+        return (
+            vol >= 500 and
+            vol_oi_ratio >= 3 and
+            premium >= 10000 and
+            0.20 <= delta <= 0.60 and
+            imp_vol >= 40 and
+            days_to_expiry >= 7 and
+            (ask - bid) <= 0.05  # spread ragionevole
+        )
+    except Exception:
+        return False
+
+
+
+def normalize_order(row):
+    return {
+        "ticker": row["Symbol"],
+        "price": float(row["Price~"]),
+        "expiry": row["Exp Date"],
+        "type": row["Type"],
+        "strike": float(row["Strike"]),
+        "moneyness": row["Moneyness"],
+        "bid": float(row["Bid"]),
+        "ask": float(row["Ask"]),
+        "volume": float(row["Volume"]),
+        "oi": float(row["Open Int"]),
+        "vol_oi": float(row["Vol/OI"]),
+        "iv": row["Imp Vol"],
+        "delta": float(row["Delta"]),
+        "time": row["Time"],
+        "premium": round((float(row["Bid"]) + float(row["Ask"])) / 2 * float(row["Volume"]), 2),
+        "trade_type": "Sweep (stimato)"  # Può essere raffinato se servono heuristics più complesse
+    }
+
+
+def get_unusual_option_activity():
+    if CSV_FILE_PATH and os.path.exists(CSV_FILE_PATH):
+        print(f"📂 Utilizzo file CSV locale: {CSV_FILE_PATH}")
+        df = pd.read_csv(CSV_FILE_PATH)
+    else:
+        print("🌐 Accesso a Barchart per scaricare i dati...")
+        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=False)
+            context = browser.new_context(accept_downloads=True)
+            page = context.new_page()
+
+            page.goto("https://www.barchart.com/login")
+            print("🌐 Navigazione verso pagina login...")
+            page.wait_for_selector('input[placeholder="Login with email"]', timeout=10000)
+            page.fill('input[placeholder="Login with email"]', BARCHART_USER)
+            page.fill('input[placeholder="Password"]', BARCHART_PASSWORD)
+            page.click('form button[type="submit"], form input[type="submit"]')
+            page.wait_for_load_state("networkidle")
+            print("✅ Login effettuato.")
+
+            page.goto("https://www.barchart.com/options/unusual-activity/stocks", timeout=60000)
+            page.wait_for_selector('a[data-bc-download-button]')
+
+            with page.expect_download() as download_info:
+                page.click('a[data-bc-download-button]')
+            download = download_info.value
+            download_path = os.path.join(DOWNLOAD_DIR, CSV_FILENAME)
+            download.save_as(download_path)
+            print(f"📥 File CSV scaricato: {download_path}")
+
+            browser.close()
+
+        df = pd.read_csv(download_path)
+
+    print("🔍 Analisi opzioni sospette...")
+    smart_money_orders = []
+
+    for _, row in df.iterrows():
+        if is_smart_money(row):
+            smart_money_orders.append(normalize_order(row))
+
+    if not smart_money_orders:
+        print("❌ Nessuna operazione da smart money rilevata.")
         return []
 
-    rows = table.find_all("tr")[1:]  # Skip header
-
-    unusual_orders = []
-    for row in rows:
-        cols = row.find_all("td")
-        if len(cols) < 9:
-            continue
-
-        try:
-            ticker = cols[0].get_text(strip=True)
-            expiry = cols[2].get_text(strip=True)
-            strike = cols[3].get_text(strip=True)
-            option_type = cols[4].get_text(strip=True)
-            volume = int(cols[5].get_text(strip=True).replace(",", ""))
-            open_interest = int(cols[6].get_text(strip=True).replace(",", ""))
-            last_price = float(cols[7].get_text(strip=True).replace("$", ""))
-            premium_str = cols[8].get_text(strip=True).replace("$", "")
-
-            if "M" in premium_str:
-                premium = float(premium_str.replace("M", "")) * 1_000_000
-            elif "K" in premium_str:
-                premium = float(premium_str.replace("K", "")) * 1_000
-            else:
-                premium = float(premium_str)
-
-            # Smart money filter (NO sweep)
-            if option_type == "Call" and premium >= 500_000 and volume > open_interest:
-                unusual_orders.append({
-                    "source": "Barchart",
-                    "ticker": ticker,
-                    "expiry": expiry,
-                    "strike": strike,
-                    "type": option_type,
-                    "volume": volume,
-                    "open_interest": open_interest,
-                    "last_price": last_price,
-                    "premium": premium
-                })
-        except Exception:
-            continue
-
-    return unusual_orders
-
-
-def get_top_sentiment_swaggy():
-    url = "https://swaggystocks.com/dashboard/wallstreetbets/ticker-sentiment"
-    headers = {"User-Agent": "Mozilla/5.0"}
-    res = requests.get(url, headers=headers)
-    soup = BeautifulSoup(res.text, "html.parser")
-
-    tickers = []
-    try:
-        table = soup.find("table")
-        rows = table.find_all("tr")[1:]  # Skip header
-        for row in rows[:20]:  # Primi 20 titoli
-            cols = row.find_all("td")
-            if len(cols) >= 2:
-                ticker = cols[0].get_text(strip=True)
-                sentiment = cols[1].get_text(strip=True)
-                tickers.append({"source": "SwaggyStocks", "ticker": ticker, "sentiment": sentiment})
-    except Exception:
-        pass
-
-    return tickers
-
-
-def cross_reference(unusual, sentiment):
-    trending = set([s['ticker'] for s in sentiment])
-    highlighted = [entry for entry in unusual if entry['ticker'] in trending]
-    return highlighted
-
-
-if __name__ == "__main__":
-    barchart_data = get_unusual_option_activity_barchart()
-    swaggy_data = get_top_sentiment_swaggy()
-    combined = cross_reference(barchart_data, swaggy_data)
-
-    now = datetime.now().strftime("%Y-%m-%d_%H-%M")
-
-    with open(f"unusual_options_{now}.json", "w") as f:
-        json.dump({"highlighted": combined, "barchart": barchart_data, "swaggy": swaggy_data}, f, indent=2)
-
-    print(f"Salvati {len(combined)} segnali incrociati su {len(barchart_data)} ordini insoliti.")
+    print(f"✅ Trovate {len(smart_money_orders)} operazioni da smart money.")
+    return smart_money_orders
