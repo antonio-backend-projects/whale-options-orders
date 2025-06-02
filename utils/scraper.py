@@ -147,8 +147,11 @@ def get_unusual_option_activity():
             page.goto("https://www.barchart.com/options/unusual-activity/stocks", timeout=60000)
             page.wait_for_selector('a[data-bc-download-button]')
 
+            # Attende e clicca il secondo bottone "Download Anyway"
+            page.wait_for_selector('button.button.download.contact-us', timeout=10000)
             with page.expect_download() as download_info:
-                page.click('a[data-bc-download-button]')
+                page.click('button.button.download.contact-us')
+
             download = download_info.value
             download_path = os.path.join(DOWNLOAD_DIR, CSV_FILENAME)
             download.save_as(download_path)
