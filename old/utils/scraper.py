@@ -13,30 +13,6 @@ CSV_FILE_PATH = os.getenv("CSV_FILE_PATH")
 DOWNLOAD_DIR = os.path.join(os.getcwd(), "downloads")
 CSV_FILENAME = "unusual-stock-options-activity.csv"
 
-def classify_trade_type(row):
-    try:
-        price = float(row["Price"])
-        bid = float(row["Bid"])
-        ask = float(row["Ask"])
-        option_type = row["Type"].upper()
-        volume = int(row["Volume"])
-        open_int = int(row["Open Int"])
-    except (ValueError, KeyError):
-        return "UNKNOWN"
-
-    is_buy = abs(price - ask) < abs(price - bid)
-    is_new_position = volume >= open_int
-
-    if is_buy and is_new_position:
-        return f"BUY {option_type}"
-    elif not is_buy and is_new_position:
-        return f"SELL {option_type}"
-    elif is_buy and not is_new_position:
-        return f"COVER {option_type}"
-    else:
-        return f"CLOSE {option_type}"
-
-
 def is_smart_money(order):
     try:
         vol = float(order["Volume"])
@@ -150,7 +126,6 @@ def get_unusual_option_activity():
     if CSV_FILE_PATH and os.path.exists(CSV_FILE_PATH):
         print(f"📂 Utilizzo file CSV locale: {CSV_FILE_PATH}")
         df = pd.read_csv(CSV_FILE_PATH)
-
     else:
         print("🌐 Accesso a Barchart per scaricare i dati...")
         os.makedirs(DOWNLOAD_DIR, exist_ok=True)
@@ -189,9 +164,7 @@ def get_unusual_option_activity():
             browser.close()
 
         df = pd.read_csv(download_path)
-        
 
-    df["Trade Type"] = df.apply(classify_trade_type, axis=1)
     print("🔍 Analisi opzioni sospette...")
     smart_money_orders = []
 
