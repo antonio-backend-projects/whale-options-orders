@@ -9,7 +9,9 @@
 [X] Rifare readme per includere le nuove modifiche
 
 
-[] Integrare la logica per tentare di dedurre se un buy o un sell da https://chatgpt.com/share/683f3fd0-6584-8011-8362-adcb34464dd2
+[X] Integrare la logica per tentare di dedurre se un buy o un sell da https://chatgpt.com/share/683f3fd0-6584-8011-8362-adcb34464dd2
+   [] continuare ad analizzare la logica legata alla classificazione dei dati ricevuti in csv per affinare l'analisi
+   [] chiedere alla ai anche il nome dell'azienda dal ticker in modo da trovare l'azienda più velocemente
 [] Scaricare i risultati e analisi in un csv
 
 
