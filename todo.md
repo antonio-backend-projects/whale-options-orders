@@ -8,6 +8,8 @@
 [] Migliorare i prompt perchè pressoche inutili al momento, migliorato ma cerchiamo di fare di meglio
 [X] Rifare readme per includere le nuove modifiche
 
+
+[] Integrare la logica per tentare di dedurre se un buy o un sell da https://chatgpt.com/share/683f3fd0-6584-8011-8362-adcb34464dd2
 [] Scaricare i risultati e analisi in un csv
 
 
