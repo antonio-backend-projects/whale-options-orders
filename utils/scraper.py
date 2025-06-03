@@ -15,13 +15,14 @@ CSV_FILENAME = "unusual-stock-options-activity.csv"
 
 def classify_trade_type(row):
     try:
-        price = float(row["Price"])
+        price = float(row["Price~"])
         bid = float(row["Bid"])
         ask = float(row["Ask"])
-        option_type = row["Type"].upper()
+        option_type = str(row["Type"]).upper()  # forza a stringa per evitare errori
         volume = int(row["Volume"])
         open_int = int(row["Open Int"])
-    except (ValueError, KeyError):
+    except Exception as e:
+        print(f"Errore classify_trade_type: {e} - row: {row.to_dict()}")
         return "UNKNOWN"
 
     is_buy = abs(price - ask) < abs(price - bid)
@@ -35,6 +36,8 @@ def classify_trade_type(row):
         return f"COVER {option_type}"
     else:
         return f"CLOSE {option_type}"
+
+
 
 
 def is_smart_money(order):
@@ -143,7 +146,7 @@ def normalize_order(row):
         "delta": float(row["Delta"]),
         "time": row["Time"],
         "premium": round(((float(row["Bid"]) + float(row["Ask"])) / 2) * float(row["Volume"]) * 100, 2),
-        "trade_type": "Sweep (stimato)"  # placeholder per tipo di trade
+        "trade_type": classify_trade_type(row)  # placeholder per tipo di trade
     }
 
 def get_unusual_option_activity():
