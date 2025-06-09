@@ -58,7 +58,7 @@ venv\Scripts\activate
 
 ```bash
 pip install -r requirements.txt
-playwright install
+python -m playwright install
 ```
 
 ---
